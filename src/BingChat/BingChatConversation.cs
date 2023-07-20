@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Net;
+using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 using BingChat.Model;
 using Microsoft.AspNetCore.Connections;
@@ -50,9 +51,9 @@ public sealed class BingChatConversation : IBingChattable
     }
 
     /// <inheritdoc/>
-    public async Task<string> AskAsync(string message, CancellationToken ct = default)
+    public async Task<string> AskAsync(string message, CancellationToken ct = default, WebProxy proxy = null, string imagelink = null)
     {
-        var request = _request.ConstructInitialPayload(message);
+        var request = _request.ConstructInitialPayload(message, imagelink);
 
         await using var conn = await Connect(ct);
 
@@ -65,9 +66,9 @@ public sealed class BingChatConversation : IBingChattable
 
     /// <inheritdoc/>
     public async IAsyncEnumerable<string> StreamAsync(
-        string message, [EnumeratorCancellation] CancellationToken ct = default)
+        string message, [EnumeratorCancellation] CancellationToken ct = default, WebProxy proxy = null, string imagelink = null)
     {
-        var request = _request.ConstructInitialPayload(message);
+        var request = _request.ConstructInitialPayload(message, imagelink);
         var chan = Channel.CreateUnbounded<string>();
         var (rx, tx) = (chan.Reader, chan.Writer);
 

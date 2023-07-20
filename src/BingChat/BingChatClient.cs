@@ -18,7 +18,7 @@ public sealed class BingChatClient : IBingChattable
     /// <summary>
     /// Create a chat conversation, so we can chat multiple times in the same context.
     /// </summary>
-    public async Task<BingChatConversation> CreateConversation()
+    public async Task<BingChatConversation> CreateConversation(WebProxy proxy = null)
     {
         var requestId = Guid.NewGuid();
 
@@ -68,7 +68,7 @@ public sealed class BingChatClient : IBingChattable
         if (cookies.Count == 0)
             cookies.Add(new Uri("https://www.bing.com"), new Cookie("_U", Utils.GenerateRandomHexString()));
 
-        using var handler = new HttpClientHandler { CookieContainer = cookies };
+        using var handler = new HttpClientHandler { CookieContainer = cookies, UseProxy = true, Proxy = proxy };
         using var client = new HttpClient(handler);
         var headers = client.DefaultRequestHeaders;
 
@@ -118,10 +118,10 @@ public sealed class BingChatClient : IBingChattable
     /// Create a one-shot conversation and ask in it. The conversation will be discarded after the operation.<br/>
     /// If you want to share the same context with multiple chat messages, use <see cref="CreateConversation"/> to create a shared conversation. 
     /// </summary>
-    public async Task<string> AskAsync(string message, CancellationToken ct = default)
+    public async Task<string> AskAsync(string message, CancellationToken ct = default, WebProxy proxy = null, string imagelink = null)
     {
-        var conversation = await CreateConversation();
-        return await conversation.AskAsync(message, ct);
+        var conversation = await CreateConversation(proxy);
+        return await conversation.AskAsync(message, ct, null, imagelink);
     }
 
     /// <summary>
@@ -132,9 +132,9 @@ public sealed class BingChatClient : IBingChattable
     /// Asynchronous stream consisting of response text words.
     /// </returns>
     public async IAsyncEnumerable<string> StreamAsync(
-        string message, [EnumeratorCancellation] CancellationToken ct = default)
+        string message, [EnumeratorCancellation] CancellationToken ct = default, WebProxy proxy = null, string imagelink = null)
     {
-        var conversation = await CreateConversation();
+        var conversation = await CreateConversation(proxy);
         await foreach (var word in conversation.StreamAsync(message, ct))
             yield return word;
     }

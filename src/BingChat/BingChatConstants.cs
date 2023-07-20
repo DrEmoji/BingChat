@@ -20,7 +20,14 @@ internal static class BingChatConstants
         "enablenewsfc",
         "dv3sugg",
         "autosave",
-        "dlislog"
+        "dlislog",
+        "weanow",
+        "galileo",
+        "dl_edge_prompt",
+        "saharagenconv5",
+        "dl_edge_desc_v2",
+        "noknowimg",
+        "iycapbing"
     };
 
     internal static readonly string[] CreativeOptionSets = OptionSets
@@ -50,5 +57,6 @@ internal static class BingChatConstants
         "SemanticSerp",
         "GenerateContentQuery",
         "SearchQuery",
+        "ActionRequest"
     };
 }

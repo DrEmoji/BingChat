@@ -31,6 +31,8 @@ internal sealed class RequestMessage
     // locationHints: [],
     public DateTime Timestamp { get; set; }
     public string Author { get; set; }
+    public string imageUrl { get; set; }
+    public string originalImageUrl { get; set; }
     public string InputMethod { get; set; }
     public string MessageType { get; set; }
     public string Text { get; set; }

@@ -23,7 +23,7 @@ internal sealed class BingChatRequest
     /// Construct the initial payload for each message
     /// </summary>
     /// <param name="message">User message to Bing Chat</param>
-    internal ChatRequest ConstructInitialPayload(string message)
+    internal ChatRequest ConstructInitialPayload(string message, string imagelink = null)
     {
         var traceId = Utils.GenerateRandomHexString();
 
@@ -44,6 +44,8 @@ internal sealed class BingChatRequest
             {
                 Timestamp = DateTime.Now,
                 Author = "user",
+                originalImageUrl = imagelink,
+                imageUrl = imagelink,
                 InputMethod = "Keyboard",
                 MessageType = "Chat",
                 Text = message
